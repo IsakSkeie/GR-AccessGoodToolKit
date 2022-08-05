@@ -85,7 +85,7 @@ class _CreateGalaxyExample
 
         // try to get galaxy
         IGalaxies gals = grAccess.QueryGalaxies(nodeName);
-        
+        Console.WriteLine("Accessing Galaxy...");
         if (gals == null || grAccess.CommandResult.Successful == false)
         {
             Console.WriteLine(grAccess.CommandResult.CustomMessage + grAccess.CommandResult.Text);
@@ -99,6 +99,7 @@ class _CreateGalaxyExample
 
         // log in
         galaxy.Login("", "");
+        Console.WriteLine("Logging into Galaxy...");
         cmd = galaxy.CommandResult;
         if (!cmd.Successful)
         {
@@ -116,8 +117,9 @@ class _CreateGalaxyExample
         cmd = galaxy.CommandResult;
         Queries SpQueries = new Queries();
 
-        alarms = SpQueries.queryAlarms(galaxy, tagnames);
-        CreateCSVTextFile(alarms,path);
+        //alarms = SpQueries.queryAlarms(galaxy, tagnames);
+        SpQueries.CreateTemplate(galaxy);
+        //CreateCSVTextFile(alarms,path);
 
 
         //List<Alarm> csvAlarms = LoadAlarmsFromCSV(path);

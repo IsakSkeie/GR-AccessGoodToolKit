@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ArchestrA.GRAccess;
+using System.IO;
 
 namespace CreateGalaxyExample
 {
@@ -103,9 +105,47 @@ namespace CreateGalaxyExample
             return alarms;
         }
 
-        public void  CreateTemplate(string name)
+        public void  CreateTemplate(IGalaxy galaxy)
         {
+
+            //string path = @"C:\Users\amoe\Documents\GRAccessToolKit\$GRToolUserDefined.aaPKG";
+            //string[] templateName = { "$GRToolUserDefined" };
+            ////Import UserDefined
+            //bool FileExists = File.Exists(path);
+            //if (FileExists)
+            //{
+            //    galaxy.ImportObjects(path, true);
+
+            //}
+            //else
+            //{
+            //    Console.WriteLine("Template file doesnt exist");
+            //}
+            //IgObjects Objects = galaxy.QueryObjectsByName(EgObjectIsTemplateOrInstance.gObjectIsTemplate, ref templateName);
+
+
+
+
+
             
+
+            string[] tagnames = { "$UserDefined" };
+            IgObjects queryResult = galaxy.QueryObjectsByName(EgObjectIsTemplateOrInstance.gObjectIsTemplate, ref tagnames);
+            //cmd = galaxy.CommandResult;
+            //if (!cmd.Successful)
+            //{
+            //    Console.WriteLine("QueryObjectsByName Failed for $UserDefined Template :" + cmd.Text + " : " + cmd.CustomMessage);
+            //    return;
+            //}
+            ITemplate userDefinedTemplate = (ITemplate)queryResult[1];
+            string instanceName = "GRToolTest";
+            IInstance sampleinst = userDefinedTemplate.CreateInstance(instanceName, true);
+            //Adds Attributes
+            sampleinst.CheckOut();
+            
+            sampleinst.AddUDA("Names", MxDataType.MxString, MxAttributeCategory.MxCategoryWriteable_USC_Lockable, MxSecurityClassification.MxSecurityOperate, true, 5);
+            IAttributes attrs = sampleinst.ConfigurableAttributes;
+
         }
     }
 }
