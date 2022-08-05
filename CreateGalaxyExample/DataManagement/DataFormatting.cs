@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace CreateGalaxyExample.DataManagement
 {
-    class DataFormatting
+    static class DataFormatting
     {
-        public List<UDATemplate> PlcCsvToGalaxyTemplate(List<PlcTemplate> PlcCsv)
+        static public List<UDATemplate> PlcCsvToGalaxyTemplate(List<PlcTemplate> PlcCsv)
         {
             List<UDATemplate> UDAs = new List<UDATemplate>();
             

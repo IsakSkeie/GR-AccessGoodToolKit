@@ -35,11 +35,11 @@ namespace CreateGalaxyExample
             }
 
 
-            //Used for debugging
-            foreach(var record in _PlcTemplate)
-            {
-                Console.WriteLine(record.Name);
-            }
+            ////Used for debugging
+            //foreach(var record in _PlcTemplate)
+            //{
+            //    Console.WriteLine(record.Description);
+            //}
         }
     }
 }

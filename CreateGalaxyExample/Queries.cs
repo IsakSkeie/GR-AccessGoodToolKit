@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using ArchestrA.GRAccess;
 using System.IO;
+using CreateGalaxyExample.DataManagement;
 
 namespace CreateGalaxyExample
 {
@@ -138,19 +139,28 @@ namespace CreateGalaxyExample
             //    return;
             //}
             ITemplate userDefinedTemplate = (ITemplate)queryResult[1];
-            string instanceName = "GRToolTest";
-            IInstance sampleinst = userDefinedTemplate.CreateInstance(instanceName, true);
-
+            string instanceName = "$GRToolTest";
+            //IInstance sampleinst = userDefinedTemplate.CreateInstance(instanceName, true);
+            ITemplate sampleTemplate = userDefinedTemplate.CreateTemplate(instanceName, true);
             //Adds Attributes
             CsvImportExport csvImport = new CsvImportExport();
             csvImport.LoadTemplate("To be selected from GUI");
+            List<UDATemplate> UDAs = DataFormatting.PlcCsvToGalaxyTemplate(csvImport._PlcTemplate);
 
 
-            //sampleinst.CheckOut();
-            
-            //sampleinst.AddUDA("Names", MxDataType.MxString, MxAttributeCategory.MxCategoryWriteable_USC_Lockable, MxSecurityClassification.MxSecurityOperate, true, 5);
+            sampleTemplate.CheckOut();
+            foreach (var UDA in UDAs)
+            {
+                Console.WriteLine(UDA.DataType);
+
+                sampleTemplate.AddUDA(UDA.Names, UDA.DataType, UDA.Category, UDA.Security, UDA.IsArray, UDA.ArrayElementCount);
+            }
+
+
+            sampleTemplate.AddUDA("Names", MxDataType.MxString, MxAttributeCategory.MxCategoryWriteable_USC_Lockable, MxSecurityClassification.MxSecurityOperate, true, 5);
             //IAttributes attrs = sampleinst.ConfigurableAttributes;
-
+            sampleTemplate.Save();
+            sampleTemplate.CheckIn();
         }
     }
 }

@@ -22,8 +22,8 @@ namespace CreateGalaxyExample
         {
             Names = _name;
             DataType = FindType(_DataType);
-            Category = MxAttributeCategory.MxCategoryUndefined;
-            Security = MxSecurityClassification.MxSecurityUndefined;
+            Category = MxAttributeCategory.MxCategoryWriteable_U;
+            Security = MxSecurityClassification.MxSecurityFreeAccess;
             IsArray = false;
             ArrayElementCount = 1;
 
