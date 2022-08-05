@@ -140,11 +140,16 @@ namespace CreateGalaxyExample
             ITemplate userDefinedTemplate = (ITemplate)queryResult[1];
             string instanceName = "GRToolTest";
             IInstance sampleinst = userDefinedTemplate.CreateInstance(instanceName, true);
+
             //Adds Attributes
-            sampleinst.CheckOut();
+            CsvImportExport csvImport = new CsvImportExport();
+            csvImport.LoadTemplate("To be selected from GUI");
+
+
+            //sampleinst.CheckOut();
             
-            sampleinst.AddUDA("Names", MxDataType.MxString, MxAttributeCategory.MxCategoryWriteable_USC_Lockable, MxSecurityClassification.MxSecurityOperate, true, 5);
-            IAttributes attrs = sampleinst.ConfigurableAttributes;
+            //sampleinst.AddUDA("Names", MxDataType.MxString, MxAttributeCategory.MxCategoryWriteable_USC_Lockable, MxSecurityClassification.MxSecurityOperate, true, 5);
+            //IAttributes attrs = sampleinst.ConfigurableAttributes;
 
         }
     }

@@ -17,6 +17,7 @@ namespace CreateGalaxyExample
         public bool IsArray { get; set; }
         public object ArrayElementCount { get; set; }
 
+        //Need several consttrucors
         public UDATemplate(string _name, string _DataType, string _Desc)
         {
             Names = _name;
@@ -27,6 +28,7 @@ namespace CreateGalaxyExample
             ArrayElementCount = 1;
 
         }
+        
 
         public MxDataType FindType(string _DataType)
         {
@@ -66,4 +68,25 @@ namespace CreateGalaxyExample
             }
         }
     }
+
+    //User this to create several instances based on needed info
+    interface IPlcTemplate
+    {
+        string DataType { get; set; }
+        string Description { get; set; }
+        string External_Access { get; set; }
+        string Name { get; set; }
+        string Style { get; set; }
+    }
+
+    class PlcTemplate : IPlcTemplate
+    {
+        public string Name { get; set; }
+        public string DataType { get; set; }
+        public string Style { get; set; }
+        public string Description { get; set; }
+        public string External_Access { get; set; }
+
+    }
 }
+
