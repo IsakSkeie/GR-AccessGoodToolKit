@@ -21,6 +21,8 @@ using System.Reflection;
 using System.Text;
 using System.Threading;
 using ArchestrA.GRAccess;
+using CreateGalaxyExample;
+using static CreateGalaxyExample.Queries;
 
 
 public class Alarm
@@ -68,7 +70,7 @@ public class Alarm
 
 
 
-class CreateGalaxyExample
+class _CreateGalaxyExample
 {
     static GRAccessApp grAccess = new GRAccessAppClass();
 
@@ -79,9 +81,11 @@ class CreateGalaxyExample
         string nodeName = Environment.MachineName;
         string galaxyName = "NK_20211210";
         string path = @"c:\tmp\Alarms_20211210.csv";
+        
 
         // try to get galaxy
         IGalaxies gals = grAccess.QueryGalaxies(nodeName);
+        
         if (gals == null || grAccess.CommandResult.Successful == false)
         {
             Console.WriteLine(grAccess.CommandResult.CustomMessage + grAccess.CommandResult.Text);
@@ -90,7 +94,7 @@ class CreateGalaxyExample
 
         IGalaxy galaxy = gals[galaxyName];
 
-
+        
         ICommandResult cmd;
 
         // log in
@@ -110,8 +114,9 @@ class CreateGalaxyExample
         //var queryResult = galaxy.query(EgObjectIsTemplateOrInstance.gObjectIsTemplate, ref tagnames);
         //var queryResult = galaxy.QueryObjects(EgObjectIsTemplateOrInstance.gObjectIsTemplate, EConditionType.basedOn, "$UserDefined", EMatch.MatchCondition);
         cmd = galaxy.CommandResult;
+        Queries SpQueries = new Queries();
 
-        alarms = queryAlarms(galaxy, tagnames);
+        alarms = SpQueries.queryAlarms(galaxy, tagnames);
         CreateCSVTextFile(alarms,path);
 
 
@@ -135,98 +140,99 @@ class CreateGalaxyExample
 
 
 
-
-    private static List<Alarm> queryAlarms(IGalaxy galaxy, string[] tagnames)
-    {
-        List<Alarm> alarms = new List<Alarm>();
-        //var queryResult = galaxy.QueryObjectsByName(EgObjectIsTemplateOrInstance.gObjectIsInstance, ref tagnames);
-        var queryResult = galaxy.QueryObjects(EgObjectIsTemplateOrInstance.gObjectIsInstance, EConditionType.basedOn, "$UserDefined", EMatch.MatchCondition);
+    
+    //private static List<Alarm> queryAlarms(IGalaxy galaxy, string[] tagnames)
+    //{
+    //    List<Alarm> alarms = new List<Alarm>();
+    //    //var queryResult = galaxy.QueryObjectsByName(EgObjectIsTemplateOrInstance.gObjectIsInstance, ref tagnames);
+    //    //Loads objects
+    //    var queryResult = galaxy.QueryObjects(EgObjectIsTemplateOrInstance.gObjectIsInstance, EConditionType.basedOn, "$UserDefined", EMatch.MatchCondition);
  
-        ICommandResult cmd;
-        cmd = galaxy.CommandResult;
+    //    ICommandResult cmd;
+    //    cmd = galaxy.CommandResult;
 
 
-        var numbObjects = queryResult.count;
-        var i = 0;
+    //    var numbObjects = queryResult.count;
+    //    var i = 0;
 
-        if (!cmd.Successful)
-        {
-            Console.WriteLine("QueryObjectsByName Failed for $UserDefined Template :" +
-                              cmd.Text + " : " +
-                              cmd.CustomMessage);
-            return null;
-        }
+    //    if (!cmd.Successful)
+    //    {
+    //        Console.WriteLine("QueryObjectsByName Failed for $UserDefined Template :" +
+    //                          cmd.Text + " : " +
+    //                          cmd.CustomMessage);
+    //        return null;
+    //    }
 
-        foreach (IInstance instance in queryResult)
-        {
-            i = i + 1;
-            //if (instance.CheckoutStatus == ECheckoutStatus.checkedOutToSomeoneElse)
-            //{
-            //    Console.WriteLine("Object is checked out by: " + instance.checkedOutBy);
-                //continue;
-            //}
+    //    foreach (IInstance instance in queryResult)
+    //    {
+    //        i = i + 1;
+    //        //if (instance.CheckoutStatus == ECheckoutStatus.checkedOutToSomeoneElse)
+    //        //{
+    //        //    Console.WriteLine("Object is checked out by: " + instance.checkedOutBy);
+    //            //continue;
+    //        //}
 
-            //if (instance.CheckoutStatus == ECheckoutStatus.notCheckedOut)
-            //{
-                //instance.CheckOut();
-                //Console.WriteLine("Check out: " + instance.Tagname);
-            //}
+    //        //if (instance.CheckoutStatus == ECheckoutStatus.notCheckedOut)
+    //        //{
+    //            //instance.CheckOut();
+    //            //Console.WriteLine("Check out: " + instance.Tagname);
+    //        //}
 
-            //Console.WriteLine("Checked Out status: " + template.CheckoutStatus);
+    //        //Console.WriteLine("Checked Out status: " + template.CheckoutStatus);
 
-            try
-            {
-                Console.WriteLine(i + "/" + numbObjects + ": " + instance.Tagname);
+    //        try
+    //        {
+    //            Console.WriteLine(i + "/" + numbObjects + ": " + instance.Tagname);
 
 
-                var instanceConfigurableAttributes = instance.ConfigurableAttributes;
-                foreach (IAttribute att in instanceConfigurableAttributes)
-                {
+    //            var instanceConfigurableAttributes = instance.ConfigurableAttributes;
+    //            foreach (IAttribute att in instanceConfigurableAttributes)
+    //            {
                 
-                    //if (!att.Name.StartsWith("a") || att.Name.Contains("_")) continue;
-                    var type = att.value.GetDataType();
+    //                //if (!att.Name.StartsWith("a") || att.Name.Contains("_")) continue;
+    //                var type = att.value.GetDataType();
 
-                    if (att.Name.Contains("Priority"))
-                    {
-                        switch (type)
-                        {
-                            case MxDataType.MxInteger:
-                                {
+    //                if (att.Name.Contains("Priority"))
+    //                {
+    //                    switch (type)
+    //                    {
+    //                        case MxDataType.MxInteger:
+    //                            {
                                    
-                                    var alarmName = att.Name.Substring(0, att.Name.Length - 9);
-                                    IAttribute alarmDesc = instanceConfigurableAttributes[alarmName + ".Description"];
+    //                                var alarmName = att.Name.Substring(0, att.Name.Length - 9);
+    //                                IAttribute alarmDesc = instanceConfigurableAttributes[alarmName + ".Description"];
 
-                                    if (alarmDesc != null)
-                                    {                                       
-                                    }
-                                    else
-                                    {
-                                        var attrName = att.Name.Substring(0, att.Name.IndexOf("."));
-                                        alarmDesc = instanceConfigurableAttributes[attrName + ".Description"];
-                                    }
+    //                                if (alarmDesc != null)
+    //                                {                                       
+    //                                }
+    //                                else
+    //                                {
+    //                                    var attrName = att.Name.Substring(0, att.Name.IndexOf("."));
+    //                                    alarmDesc = instanceConfigurableAttributes[attrName + ".Description"];
+    //                                }
                                     
-                                    alarms.Add(new Alarm(instance.DerivedFrom, instance.Area, instance.Tagname, alarmName, att.value.GetInteger(), alarmDesc.value.GetString().Replace(",",".")));
-                                    break;
-                                }
-                        }
-                    }
+    //                                alarms.Add(new Alarm(instance.DerivedFrom, instance.Area, instance.Tagname, alarmName, att.value.GetInteger(), alarmDesc.value.GetString().Replace(",",".")));
+    //                                break;
+    //                            }
+    //                    }
+    //                }
                     
-                }
+    //            }
               
-            }
+    //        }
             
-            catch (Exception e)
-            {
-                Console.WriteLine(e.ToString());
-            }
-            finally
-            {
+    //        catch (Exception e)
+    //        {
+    //            Console.WriteLine(e.ToString());
+    //        }
+    //        finally
+    //        {
 
-            }
+    //        }
             
-        }
-        return alarms;
-    }
+    //    }
+    //    return alarms;
+    //}
 
 
 
