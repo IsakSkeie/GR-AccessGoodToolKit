@@ -22,8 +22,9 @@ namespace CreateGalaxyExample
         {
             Names = _name;
             DataType = FindType(_DataType);
-            Category = MxAttributeCategory.MxCategoryWriteable_U;
-            Security = MxSecurityClassification.MxSecurityFreeAccess;
+            Category = MxAttributeCategory.MxCategoryWriteable_USC_Lockable;
+            //Have this as config in gui
+            Security = MxSecurityClassification.MxSecurityOperate;
             IsArray = false;
             ArrayElementCount = 1;
 

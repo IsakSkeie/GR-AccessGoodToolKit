@@ -83,7 +83,7 @@ class _CreateGalaxyExample
         string path = @"c:\tmp\Alarms_20211210.csv";
         
 
-        // try to get galaxy
+        // try to get galaxy, put this in seperate class
         IGalaxies gals = grAccess.QueryGalaxies(nodeName);
         Console.WriteLine("Accessing Galaxy...");
         if (gals == null || grAccess.CommandResult.Successful == false)

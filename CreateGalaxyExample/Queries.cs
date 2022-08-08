@@ -154,6 +154,7 @@ namespace CreateGalaxyExample
                 Console.WriteLine(UDA.DataType);
 
                 sampleTemplate.AddUDA(UDA.Names, UDA.DataType, UDA.Category, UDA.Security, UDA.IsArray, UDA.ArrayElementCount);
+                //sampleTemplate.AddUDA(UDA.Names, UDA.DataType, UDA.Category, MxSecurityClassification.MxSecurity, true, 5);
             }
 
 
