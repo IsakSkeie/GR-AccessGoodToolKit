@@ -125,11 +125,12 @@
     <Compile Include="AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="DataConnection\GalaxyConnection.cs" />
     <Compile Include="DataManagement\CsvImportExport.cs" />
     <Compile Include="DataManagement\DataFormatting.cs" />
     <Compile Include="DataManagement\DataTemplate.cs" />
     <Compile Include="Example.cs" />
-    <Compile Include="Queries.cs" />
+    <Compile Include="DataConnection\Queries.cs" />
     <Compile Include="Main.cs">
       <SubType>Code</SubType>
     </Compile>
