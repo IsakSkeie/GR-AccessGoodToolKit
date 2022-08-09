@@ -41,5 +41,16 @@ namespace CreateGalaxyExample
             //    Console.WriteLine(record.Description);
             //}
         }
+
+        public List<Alarm> LoadAlarmsFromCSV(string path)
+        {
+            List<Alarm> csvAlarms = File.ReadAllLines(path)
+                           .Skip(1)
+                           .Select(v => Alarm.AlarmsFromCSV(v))
+                           .ToList();
+            return csvAlarms;
+        }
+
+        
     }
 }

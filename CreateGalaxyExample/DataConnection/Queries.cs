@@ -1,12 +1,7 @@
-﻿using ArchestrA.GRAccess;
+﻿using CreateGalaxyExample.DataManagement;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using ArchestrA.GRAccess;
-using System.IO;
-using CreateGalaxyExample.DataManagement;
 
 namespace CreateGalaxyExample
 {
@@ -106,7 +101,7 @@ namespace CreateGalaxyExample
             return alarms;
         }
 
-        public void  CreateTemplate(IGalaxy galaxy)
+        public void CreateTemplate(IGalaxy galaxy)
         {
 
             //string path = @"C:\Users\amoe\Documents\GRAccessToolKit\$GRToolUserDefined.aaPKG";
@@ -128,7 +123,7 @@ namespace CreateGalaxyExample
 
 
 
-            
+
 
             string[] tagnames = { "$UserDefined" };
             IgObjects queryResult = galaxy.QueryObjectsByName(EgObjectIsTemplateOrInstance.gObjectIsTemplate, ref tagnames);
@@ -147,7 +142,7 @@ namespace CreateGalaxyExample
             csvImport.LoadTemplate("To be selected from GUI");
             List<UDATemplate> UDAs = DataFormatting.PlcCsvToGalaxyTemplate(csvImport._PlcTemplate);
 
-
+            //Implement check out method
             sampleTemplate.CheckOut();
             foreach (var UDA in UDAs)
             {
@@ -162,5 +157,99 @@ namespace CreateGalaxyExample
             sampleTemplate.Save();
             sampleTemplate.CheckIn();
         }
+
+        private static void UpdateAlarmsObjects(IGalaxy galaxy, List<Alarm> alarms)
+        {
+            ICommandResult cmd;
+
+            var changedAlarms = from alarm in alarms
+                                where alarm.Changed
+                                select alarm;
+
+            string[] objList = changedAlarms.Select(x => x.ObjName).Distinct().ToArray();
+
+
+            var queryResult = galaxy.QueryObjectsByName(EgObjectIsTemplateOrInstance.gObjectIsInstance, ref objList);
+            cmd = galaxy.CommandResult;
+
+
+            foreach (IInstance instance in queryResult)
+            {
+                bool result = CheckOutInstance(galaxy, instance);
+
+                var configurableAttributes = instance.ConfigurableAttributes;
+
+                var changedAlarmTags = from changedAlarm in alarms
+                                       where changedAlarm.ObjName == instance.Tagname
+                                       select changedAlarm;
+
+                foreach (Alarm alarmTag in changedAlarmTags)
+                {
+                    MxValue mxv = new MxValueClass();
+                    Console.WriteLine(alarmTag.AlarmName);
+                    MxValue newValue = new MxValueClass();
+                    newValue.PutInteger(alarmTag.Priority);
+                    configurableAttributes[alarmTag.AlarmName + ".Priority"].SetValue(newValue);
+
+                    newValue = new MxValueClass();
+                    newValue.PutString(alarmTag.AlarmDesc);
+                    configurableAttributes[alarmTag.AlarmName + ".Description"].SetValue(newValue);
+                }
+
+
+                //Implement SaveInstance method
+                result = SaveInstance(galaxy, instance);
+                //Implement check in instance method
+                result = CheckInInstance(galaxy, instance);
+
+            }
+
+        }
+
+        public bool CheckOutInstance(IGalaxy galaxy, IInstance instance)
+        {
+            if (instance.CheckoutStatus == ECheckoutStatus.checkedOutToSomeoneElse)
+            {
+                Console.WriteLine("Object is checked out by: " + instance.checkedOutBy);
+                return false;
+                //continue;
+            }
+
+            if (instance.CheckoutStatus == ECheckoutStatus.notCheckedOut)
+            {
+                instance.CheckOut();
+                return true;
+                //Console.WriteLine("Check out: " + instance.Tagname);
+            }
+
+            return false;
+
+        }
+
+        public bool CheckInInstance(IGalaxy galaxy, IInstance instance)
+        {
+            if (instance.CheckoutStatus == ECheckoutStatus.checkedOutToMe)
+            {
+                instance.CheckIn("GRAccess");
+                return true;
+                //Console.WriteLine("Check out: " + instance.Tagname);
+            }
+
+            return false;
+        }
+
+        public bool SaveInstance(IGalaxy galaxy, IInstance instance)
+        {
+            if (instance.CheckoutStatus == ECheckoutStatus.checkedOutToMe)
+            {
+                instance.Save();
+                return true;
+                //Console.WriteLine("Check out: " + instance.Tagname);
+            }
+
+            return false;
+        }
+
+
     }
 }
