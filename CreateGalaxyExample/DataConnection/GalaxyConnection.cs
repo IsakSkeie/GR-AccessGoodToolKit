@@ -3,15 +3,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Configuration;
+using System.Collections.Specialized;
+
 
 namespace CreateGalaxyExample.DataConnection
 {
-    public class GalaxyConnection
+    public static class GalaxyConnection
     {
-        public void Connect()
+        public static void Connect()
         {
 
-            
+            string Galaxy = ConfigurationManager.AppSettings.Get("Galaxy");
             IGalaxies gals = grAccess.QueryGalaxies(nodeName);
             Console.WriteLine("Accessing Galaxy...");
             if (gals == null || grAccess.CommandResult.Successful == false)
@@ -26,7 +29,7 @@ namespace CreateGalaxyExample.DataConnection
             ICommandResult cmd;
         }
         
-        public void Login()
+        public static void Login()
         {
             galaxy.Login("", "");
             Console.WriteLine("Logging into Galaxy...");

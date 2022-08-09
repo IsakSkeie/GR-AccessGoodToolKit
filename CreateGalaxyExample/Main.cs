@@ -22,6 +22,7 @@ using System.Text;
 using System.Threading;
 using ArchestrA.GRAccess;
 using CreateGalaxyExample;
+using CreateGalaxyExample.DataConnection;
 using static CreateGalaxyExample.Queries;
 
 
@@ -81,44 +82,23 @@ class _CreateGalaxyExample
         string nodeName = Environment.MachineName;
         string galaxyName = "NK_20211210";
         string path = @"c:\tmp\Alarms_20211210.csv";
+
+
+
+        GalaxyConnection.Connect();
+        GalaxyConnection.Login();
+        Console.WriteLine("Logged in to galaxy");
+        Console.WriteLine("");
         
 
-        // try to get galaxy
-        IGalaxies gals = grAccess.QueryGalaxies(nodeName);
-        Console.WriteLine("Accessing Galaxy...");
-        if (gals == null || grAccess.CommandResult.Successful == false)
-        {
-            Console.WriteLine(grAccess.CommandResult.CustomMessage + grAccess.CommandResult.Text);
-            return;
-        }
 
-        IGalaxy galaxy = gals[galaxyName];
 
         
-        ICommandResult cmd;
-
-        // log in
-        galaxy.Login("", "");
-        Console.WriteLine("Logging into Galaxy...");
-        cmd = galaxy.CommandResult;
-        if (!cmd.Successful)
-        {
-            Console.WriteLine("Login to galaxy Example1 Failed :" +
-                              cmd.Text + " : " +
-                              cmd.CustomMessage);
-            return;
-        }
-
-        // get the $UserDefined template
-        string[] tagnames = { "UserDefined" };
-
-        //var queryResult = galaxy.query(EgObjectIsTemplateOrInstance.gObjectIsTemplate, ref tagnames);
-        //var queryResult = galaxy.QueryObjects(EgObjectIsTemplateOrInstance.gObjectIsTemplate, EConditionType.basedOn, "$UserDefined", EMatch.MatchCondition);
-        cmd = galaxy.CommandResult;
         Queries SpQueries = new Queries();
 
         //alarms = SpQueries.queryAlarms(galaxy, tagnames);
         SpQueries.CreateTemplate(galaxy);
+       
         //CreateCSVTextFile(alarms,path);
 
 
