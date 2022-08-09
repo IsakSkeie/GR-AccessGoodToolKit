@@ -26,47 +26,6 @@ using CreateGalaxyExample.DataConnection;
 using static CreateGalaxyExample.Queries;
 
 
-public class Alarm
-{
-    public string TemplateName { get; set; }
-    public string Area { get; set; }
-    public string ObjName { get; set; }
-    public string AlarmName { get; set; }
-    public int Priority { get; set; }
-    public string AlarmDesc { get; set; }
-    public bool Changed { get; set; }
-
-    public Alarm()
-    {
-
-    }
-
-
-    public Alarm(string TemplateName, string Area,string ObjName, string AlarmName, int Priority, string AlarmDesc,bool Changed = false)
-    {
-        this.ObjName = ObjName;
-        this.AlarmName = AlarmName;
-        this.Priority= Priority;
-        this.AlarmDesc = AlarmDesc;
-        this.TemplateName = TemplateName;
-        this.Area = Area;
-    }
-
-    public static Alarm AlarmsFromCSV(string csvLine)
-    {
-        string[] values = csvLine.Split(',');
-        Alarm alarm = new Alarm();
-        alarm.TemplateName = values[0];
-        alarm.Area = values[1];
-        alarm.ObjName = values[2];
-        alarm.AlarmName = values[3];
-        alarm.Priority = Convert.ToInt32(values[4]);
-        alarm.AlarmDesc = values[5];
-        if (values[6].Length > 0) alarm.Changed = true;
-        else alarm.Changed = false; ;
-        return alarm;
-    }
-}
 
 
 
@@ -96,20 +55,10 @@ class _CreateGalaxyExample
         
         Queries SpQueries = new Queries();
 
-        //alarms = SpQueries.queryAlarms(galaxy, tagnames);
+       
         SpQueries.CreateTemplate(galaxy);
        
-        //CreateCSVTextFile(alarms,path);
-
-
-        //List<Alarm> csvAlarms = LoadAlarmsFromCSV(path);
-
-        //UpdateObjects(galaxy, csvAlarms);
-
-        //foreach (Alarm alarm in changedAlarm)
-        //{
-        //    Console.WriteLine("ReadBack" + alarm.ObjName + ", " + alarm.AlarmName + ", " + alarm.Priority + ", " + alarm.AlarmDesc+ "," + alarm.Changed);
-        //}
+       
 
         Console.WriteLine();
         Console.Write("Press ENTER to quit: ");

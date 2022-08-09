@@ -19,5 +19,19 @@ namespace CreateGalaxyExample.DataManagement
             }
             return UDAs;
         }
+        public static Alarm AlarmsFromCSV(string csvLine)
+        {
+            string[] values = csvLine.Split(',');
+            Alarm alarm = new Alarm();
+            alarm.TemplateName = values[0];
+            alarm.Area = values[1];
+            alarm.ObjName = values[2];
+            alarm.AlarmName = values[3];
+            alarm.Priority = Convert.ToInt32(values[4]);
+            alarm.AlarmDesc = values[5];
+            if (values[6].Length > 0) alarm.Changed = true;
+            else alarm.Changed = false; ;
+            return alarm;
+        }
     }
 }

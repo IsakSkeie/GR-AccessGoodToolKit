@@ -1,18 +1,11 @@
-﻿using ArchestrA.GRAccess;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace CreateGalaxyExample
+﻿namespace CreateGalaxyExample
 {
     class UDATemplate
     {
 
         public string Names { get; set; }
         public MxDataType DataType { get; set; }
-        public MxAttributeCategory Category {get; set;}
+        public MxAttributeCategory Category { get; set; }
         public MxSecurityClassification Security { get; set; }
         public bool IsArray { get; set; }
         public object ArrayElementCount { get; set; }
@@ -28,11 +21,11 @@ namespace CreateGalaxyExample
             ArrayElementCount = 1;
 
         }
-        
+
 
         public MxDataType FindType(string _DataType)
         {
-         
+
             switch (_DataType)
             {
                 case "BOOL":
@@ -56,7 +49,7 @@ namespace CreateGalaxyExample
                 default:
                     return MxAttributeCategory.MxCategoryUndefined;
             }
-                 
+
         }
 
         public MxSecurityClassification FindSecurity(string _Security)
@@ -88,5 +81,17 @@ namespace CreateGalaxyExample
         public string External_Access { get; set; }
 
     }
+    class Alarm
+    {
+    
+
+        public string ObjName { get; set; }
+        public string AlarmName { get; set; }
+        public int Priority { get; set; }
+        public string AlarmDesc { get; set; }
+        public string TemplateName { get; set; }
+        public string Area { get; set; }
+    }
 }
+
 
