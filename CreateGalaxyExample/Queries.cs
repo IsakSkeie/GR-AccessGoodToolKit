@@ -12,8 +12,14 @@ namespace CreateGalaxyExample
 {
     class Queries
     {
+        public IGalaxy galaxy;
 
-        public List<Alarm> queryAlarms(IGalaxy galaxy, string[] tagnames)
+        public Queries(IGalaxy _galaxy)
+        {
+            galaxy = _galaxy;
+        }
+
+        public List<Alarm> queryAlarms(string[] tagnames)
         {
             List<Alarm> alarms = new List<Alarm>();
             //var queryResult = galaxy.QueryObjectsByName(EgObjectIsTemplateOrInstance.gObjectIsInstance, ref tagnames);
@@ -106,62 +112,43 @@ namespace CreateGalaxyExample
             return alarms;
         }
 
-        public void  CreateTemplate(IGalaxy galaxy)
+        public async Task CreateTemplateAsync(string TemplateName, List<UDATemplate> _UDAs)
         {
 
-            //string path = @"C:\Users\amoe\Documents\GRAccessToolKit\$GRToolUserDefined.aaPKG";
-            //string[] templateName = { "$GRToolUserDefined" };
-            ////Import UserDefined
-            //bool FileExists = File.Exists(path);
-            //if (FileExists)
-            //{
-            //    galaxy.ImportObjects(path, true);
-
-            //}
-            //else
-            //{
-            //    Console.WriteLine("Template file doesnt exist");
-            //}
-            //IgObjects Objects = galaxy.QueryObjectsByName(EgObjectIsTemplateOrInstance.gObjectIsTemplate, ref templateName);
-
-
-
-
+            string[] tagnames = { "$UserDefined" };
+            bool success = false;
 
             
-
-            string[] tagnames = { "$UserDefined" };
-            IgObjects queryResult = galaxy.QueryObjectsByName(EgObjectIsTemplateOrInstance.gObjectIsTemplate, ref tagnames);
-            //cmd = galaxy.CommandResult;
-            //if (!cmd.Successful)
+            //await Task.Run(() =>
             //{
-            //    Console.WriteLine("QueryObjectsByName Failed for $UserDefined Template :" + cmd.Text + " : " + cmd.CustomMessage);
-            //    return;
-            //}
-            ITemplate userDefinedTemplate = (ITemplate)queryResult[1];
-            string instanceName = "$GRToolTest";
-            //IInstance sampleinst = userDefinedTemplate.CreateInstance(instanceName, true);
-            ITemplate sampleTemplate = userDefinedTemplate.CreateTemplate(instanceName, true);
+                IgObjects queryResult = galaxy.QueryObjectsByName(EgObjectIsTemplateOrInstance.gObjectIsTemplate, ref tagnames);
+
+                ITemplate userDefinedTemplate = (ITemplate)queryResult[1];
+                Console.WriteLine(TemplateName);
+                //IInstance sampleinst = userDefinedTemplate.CreateInstance(instanceName, true);
+                ITemplate sampleTemplate = userDefinedTemplate.CreateTemplate(TemplateName, true);
             //Adds Attributes
             CsvImportExport csvImport = new CsvImportExport();
             csvImport.LoadTemplate("To be selected from GUI");
             List<UDATemplate> UDAs = DataFormatting.PlcCsvToGalaxyTemplate(csvImport._PlcTemplate);
 
-
+            //Need a try here, or check if it already exists, and print error
             sampleTemplate.CheckOut();
-            foreach (var UDA in UDAs)
+
+            if (!(UDAs is null))
             {
-                Console.WriteLine(UDA.DataType);
+                 foreach (var UDA in UDAs)
+                                {
+                                    Console.WriteLine(UDA.DataType);
+                                    sampleTemplate.AddUDA(UDA.Names, UDA.DataType, UDA.Category, UDA.Security, UDA.IsArray, UDA.ArrayElementCount);
 
-                sampleTemplate.AddUDA(UDA.Names, UDA.DataType, UDA.Category, UDA.Security, UDA.IsArray, UDA.ArrayElementCount);
-                //sampleTemplate.AddUDA(UDA.Names, UDA.DataType, UDA.Category, MxSecurityClassification.MxSecurity, true, 5);
+                                }
+                                sampleTemplate.Save();
+                                sampleTemplate.CheckIn();
             }
-
-
-            sampleTemplate.AddUDA("Names", MxDataType.MxString, MxAttributeCategory.MxCategoryWriteable_USC_Lockable, MxSecurityClassification.MxSecurityOperate, true, 5);
-            //IAttributes attrs = sampleinst.ConfigurableAttributes;
-            sampleTemplate.Save();
-            sampleTemplate.CheckIn();
+               
+            //});
+            
         }
     }
 }

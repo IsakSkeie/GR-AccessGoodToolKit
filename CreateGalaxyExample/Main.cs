@@ -23,7 +23,9 @@ using System.Threading;
 using ArchestrA.GRAccess;
 using CreateGalaxyExample;
 using static CreateGalaxyExample.Queries;
-
+using System.Configuration;
+using System.Collections.Specialized;
+using System.Threading.Tasks;
 
 public class Alarm
 {
@@ -75,11 +77,12 @@ class _CreateGalaxyExample
     static GRAccessApp grAccess = new GRAccessAppClass();
 
     [STAThread]
-    static void Main()
+    static async Task Main()
     {
         List<Alarm> alarms = new List<Alarm>();
         string nodeName = Environment.MachineName;
-        string galaxyName = "NK_20211210";
+        //string galaxyName = "NK_20211210";
+        string galaxyName = ConfigurationManager.AppSettings.Get("GalaxyName");
         string path = @"c:\tmp\Alarms_20211210.csv";
         
 
@@ -115,10 +118,10 @@ class _CreateGalaxyExample
         //var queryResult = galaxy.query(EgObjectIsTemplateOrInstance.gObjectIsTemplate, ref tagnames);
         //var queryResult = galaxy.QueryObjects(EgObjectIsTemplateOrInstance.gObjectIsTemplate, EConditionType.basedOn, "$UserDefined", EMatch.MatchCondition);
         cmd = galaxy.CommandResult;
-        Queries SpQueries = new Queries();
+        var UserLayer = new UserLayer(galaxy);
+        await UserLayer.createTemplateFromCsv("GrToolTest1");
+        //var TemplateTask2 = UserLayer.createTemplateFromCsv("GrToolTest2");
 
-        //alarms = SpQueries.queryAlarms(galaxy, tagnames);
-        SpQueries.CreateTemplate(galaxy);
         //CreateCSVTextFile(alarms,path);
 
 
@@ -132,7 +135,12 @@ class _CreateGalaxyExample
         //}
 
         Console.WriteLine();
+        //await TemplateTask1;
+        //await TemplateTask2;
+
+
         Console.Write("Press ENTER to quit: ");
+       
         string dummy;
         dummy = Console.ReadLine();
         galaxy.Logout();
