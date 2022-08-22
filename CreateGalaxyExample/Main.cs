@@ -26,6 +26,7 @@ using static CreateGalaxyExample.Queries;
 using System.Configuration;
 using System.Collections.Specialized;
 using System.Threading.Tasks;
+using CreateGalaxyExample.DataManagement;
 
 public class Alarm
 {
@@ -119,7 +120,11 @@ class _CreateGalaxyExample
         //var queryResult = galaxy.QueryObjects(EgObjectIsTemplateOrInstance.gObjectIsTemplate, EConditionType.basedOn, "$UserDefined", EMatch.MatchCondition);
         cmd = galaxy.CommandResult;
         var UserLayer = new UserLayer(galaxy);
-        await UserLayer.createTemplateFromCsv("GrToolTest1");
+        await UserLayer.createTemplateFromCsv("$GRToolTest");
+
+
+        
+
         //var TemplateTask2 = UserLayer.createTemplateFromCsv("GrToolTest2");
 
         //CreateCSVTextFile(alarms,path);
